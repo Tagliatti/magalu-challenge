@@ -1,0 +1,14 @@
+quiet: False
+disable-version-string: True
+with-expecter: True
+mockname: "{{.InterfaceName}}"
+filename: "{{.MockName}}.go"
+outpkg: mocks
+issue-845-fix: True
+resolve-type-alias: False
+packages:
+  github.com/Tagliatti/magalu-challenge/notifications:
+    config:
+      dir: "notifications/mocks"
+    interfaces:
+      Repository:
