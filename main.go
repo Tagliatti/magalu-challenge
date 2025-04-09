@@ -22,10 +22,12 @@ func main() {
 	healthy := health.NewHealthyHandler()
 	createNotification := handler.NewCreateHandler(notificationStorage)
 	statusNotification := handler.NewStatusHandler(notificationStorage)
+	deleteNotification := handler.NewDeleteHandler(notificationStorage)
 
 	server := http.NewServeMux()
 	server.HandleFunc("POST /notifications", createNotification.Handler)
 	server.HandleFunc("GET /notifications/{id}/status", statusNotification.Handler)
+	server.HandleFunc("DELETE /notifications/{id}", deleteNotification.Handler)
 	server.HandleFunc("/", healthy.Handler)
 
 	log.Println("Servidor iniciado na porta 8080...")
