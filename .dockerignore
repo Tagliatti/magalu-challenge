@@ -1,0 +1,6 @@
+tmp/
+coverage.out
+README.md
+CHALLENGE.md
+migration
+docker-compose.yaml
