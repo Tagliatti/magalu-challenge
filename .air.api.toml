@@ -7,10 +7,10 @@ tmp_dir = "tmp"
 
 [build]
 # Just plain old shell command. You could use `make` as well.
-cmd = "go build -gcflags='all=-N -l' -o ./tmp/main ."
+cmd = "go build -gcflags='all=-N -l' -o ./tmp/api cmd/api/main.go"
 # Binary file yields from `cmd`.
-bin = "tmp/main"
+bin = "tmp/api"
 # Customize binary.
-full_bin = "dlv exec --accept-multiclient --headless --continue --listen :2345 --api-version 2 ./tmp/main"
+full_bin = "dlv exec --accept-multiclient --headless --continue --listen :2345 --api-version 2 ./tmp/api"
 # Ignore these filename extensions or directories.
 exclude_dir = ["tmp", "vendor", "docker", "migration"]
