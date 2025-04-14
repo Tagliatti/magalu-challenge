@@ -2,9 +2,9 @@ package notifications
 
 import (
 	"context"
-	"database/sql"
 	"github.com/Tagliatti/magalu-challenge/database"
 	"github.com/Tagliatti/magalu-challenge/testhelpers"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -15,7 +15,7 @@ type PostgresRepositoryTestSuite struct {
 	suite.Suite
 	pgContainer *testhelpers.PostgresContainer
 	repository  *PostgresRepository
-	db          *sql.DB
+	db          *pgxpool.Pool
 	ctx         context.Context
 }
 
@@ -27,7 +27,7 @@ func (suite *PostgresRepositoryTestSuite) SetupSuite() {
 
 	suite.pgContainer = pgContainer
 
-	db, err := database.ConnectTest(pgContainer.ConnectionString)
+	db, err := database.ConnectTest(suite.ctx, pgContainer.ConnectionString)
 	require.Nil(suite.T(), err, "failed to connect to database: %v", err)
 
 	suite.db = db
@@ -56,10 +56,10 @@ func (suite *PostgresRepositoryTestSuite) TestSuccessCreateNotification() {
 			Recipient: "test@example.com",
 		}
 
-		id, err := suite.repository.CreateNotification(createNotification)
+		id, err := suite.repository.CreateNotification(suite.ctx, createNotification)
 		require.Nilf(t, err, "failed to create notification: %v", err)
 
-		notification, err := suite.repository.FindNotificationByID(id)
+		notification, err := suite.repository.FindNotificationByID(suite.ctx, id)
 		require.Nilf(t, err, "failed to find notification by ID: %v", err)
 
 		assert.NotNil(t, notification, "notification should not be nil")
@@ -84,7 +84,7 @@ func (suite *PostgresRepositoryTestSuite) TestErrorOnCreateNotificationWithInval
 			Recipient: "test@example.com",
 		}
 
-		id, err := suite.repository.CreateNotification(createNotification)
+		id, err := suite.repository.CreateNotification(suite.ctx, createNotification)
 		assert.NotNil(t, err)
 		assert.Zero(t, id)
 	})
@@ -102,10 +102,10 @@ func (suite *PostgresRepositoryTestSuite) TestSuccessFindNotificationStatus() {
 			Recipient: "test@example.com",
 		}
 
-		id, err := suite.repository.CreateNotification(createNotification)
+		id, err := suite.repository.CreateNotification(suite.ctx, createNotification)
 		require.Nilf(t, err, "failed to create notification: %v", err)
 
-		notificationStatus, err := suite.repository.FindNotificationStatusByID(id)
+		notificationStatus, err := suite.repository.FindNotificationStatusByID(suite.ctx, id)
 		require.Nilf(t, err, "failed to find notification by ID: %v", err)
 
 		assert.NotNil(t, notificationStatus, "notification should not be nil")
@@ -126,10 +126,10 @@ func (suite *PostgresRepositoryTestSuite) TestNotFoundOnFindNotificationStatus()
 			Recipient: "test@example.com",
 		}
 
-		id, err := suite.repository.CreateNotification(createNotification)
+		id, err := suite.repository.CreateNotification(suite.ctx, createNotification)
 		require.Nilf(t, err, "failed to create notification: %v", err)
 
-		notificationStatus, err := suite.repository.FindNotificationStatusByID(id + 1)
+		notificationStatus, err := suite.repository.FindNotificationStatusByID(suite.ctx, id+1)
 		require.Nilf(t, err, "failed to find notification by ID: %v", err)
 
 		assert.Nil(t, notificationStatus)
@@ -148,13 +148,13 @@ func (suite *PostgresRepositoryTestSuite) TestSuccessFindSentNotificationStatus(
 			Recipient: "test@example.com",
 		}
 
-		id, err := suite.repository.CreateNotification(createNotification)
+		id, err := suite.repository.CreateNotification(suite.ctx, createNotification)
 		require.Nilf(t, err, "failed to create notification: %v", err)
 
-		updated, err := suite.repository.UpdateNotificationAsSent(id)
+		updated, err := suite.repository.UpdateNotificationAsSent(suite.ctx, id)
 		require.Nilf(t, err, "failed to update notification as sent: %v", err)
 
-		notificationStatus, err := suite.repository.FindNotificationStatusByID(id)
+		notificationStatus, err := suite.repository.FindNotificationStatusByID(suite.ctx, id)
 		require.Nilf(t, err, "failed to find notification by ID: %v", err)
 		require.NotNil(t, notificationStatus, "notification should not be nil")
 
@@ -176,15 +176,15 @@ func (suite *PostgresRepositoryTestSuite) TestSuccessDeleteNotification() {
 			Recipient: "test@example.com",
 		}
 
-		id, err := suite.repository.CreateNotification(createNotification)
+		id, err := suite.repository.CreateNotification(suite.ctx, createNotification)
 		require.Nilf(t, err, "failed to create notification: %v", err)
 
-		deleted, err := suite.repository.DeleteNotificationByID(id)
+		deleted, err := suite.repository.DeleteNotificationByID(suite.ctx, id)
 		require.Nilf(t, err, "failed to delete notification: %v", err)
 
-		notification, err := suite.repository.FindNotificationByID(id)
+		notification, err := suite.repository.FindNotificationByID(suite.ctx, id)
 		require.Nilf(t, err, "failed to find notification by ID: %v", err)
-	
+
 		assert.True(t, deleted)
 		assert.Nil(t, notification)
 	})
@@ -202,16 +202,51 @@ func (suite *PostgresRepositoryTestSuite) TestNotFoundOnDeleteNotification() {
 			Recipient: "test@example.com",
 		}
 
-		id, err := suite.repository.CreateNotification(createNotification)
+		id, err := suite.repository.CreateNotification(suite.ctx, createNotification)
 		require.Nilf(t, err, "failed to create notification: %v", err)
 
-		deleted, err := suite.repository.DeleteNotificationByID(id + 1)
+		deleted, err := suite.repository.DeleteNotificationByID(suite.ctx, id+1)
 		require.Nilf(t, err, "failed to delete notification: %v", err)
 
-		notification, err := suite.repository.FindNotificationByID(id)
+		notification, err := suite.repository.FindNotificationByID(suite.ctx, id)
 		require.Nilf(t, err, "failed to find notification by ID: %v", err)
 
 		assert.False(t, deleted)
 		assert.NotNil(t, notification)
+	})
+}
+
+func (suite *PostgresRepositoryTestSuite) TestSuccessListPendingNotifications() {
+	t := suite.T()
+
+	t.Run("Should list only pending notifications", func(t *testing.T) {
+		err := testhelpers.TruncateAllTables(suite.ctx, suite.db)
+		require.Nilf(t, err, "failed to truncate tables: %v", err)
+
+		pendingNotification := &CreateNotification{
+			Type:      "email",
+			Recipient: "pending@example.com",
+		}
+		_, err = suite.repository.CreateNotification(suite.ctx, pendingNotification)
+		require.Nilf(t, err, "failed to create pending notification: %v", err)
+
+		sentNotification := &CreateNotification{
+			Type:      "email",
+			Recipient: "sent@example.com",
+		}
+		sentID, err := suite.repository.CreateNotification(suite.ctx, sentNotification)
+		require.Nilf(t, err, "failed to create sent notification: %v", err)
+
+		_, err = suite.repository.UpdateNotificationAsSent(suite.ctx, sentID)
+		require.Nilf(t, err, "failed to update notification as sent: %v", err)
+
+		pendingNotifications, err := suite.repository.ListPendingNotifications(suite.ctx)
+		require.Nilf(t, err, "failed to list pending notifications: %v", err)
+
+		assert.Len(t, pendingNotifications, 1)
+		assert.Equal(t, pendingNotification.Recipient, pendingNotifications[0].Recipient)
+		assert.Equal(t, pendingNotification.Type, pendingNotifications[0].Type)
+		assert.False(t, pendingNotifications[0].Sent)
+		assert.Nil(t, pendingNotifications[0].SentAt)
 	})
 }

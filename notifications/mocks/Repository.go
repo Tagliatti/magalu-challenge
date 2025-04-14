@@ -3,6 +3,8 @@
 package mocks
 
 import (
+	context "context"
+
 	notifications "github.com/Tagliatti/magalu-challenge/notifications"
 	mock "github.com/stretchr/testify/mock"
 )
@@ -20,9 +22,9 @@ func (_m *Repository) EXPECT() *Repository_Expecter {
 	return &Repository_Expecter{mock: &_m.Mock}
 }
 
-// CreateNotification provides a mock function with given fields: createNotification
-func (_m *Repository) CreateNotification(createNotification *notifications.CreateNotification) (int64, error) {
-	ret := _m.Called(createNotification)
+// CreateNotification provides a mock function with given fields: ctx, createNotification
+func (_m *Repository) CreateNotification(ctx context.Context, createNotification *notifications.CreateNotification) (int64, error) {
+	ret := _m.Called(ctx, createNotification)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateNotification")
@@ -30,17 +32,17 @@ func (_m *Repository) CreateNotification(createNotification *notifications.Creat
 
 	var r0 int64
 	var r1 error
-	if rf, ok := ret.Get(0).(func(*notifications.CreateNotification) (int64, error)); ok {
-		return rf(createNotification)
+	if rf, ok := ret.Get(0).(func(context.Context, *notifications.CreateNotification) (int64, error)); ok {
+		return rf(ctx, createNotification)
 	}
-	if rf, ok := ret.Get(0).(func(*notifications.CreateNotification) int64); ok {
-		r0 = rf(createNotification)
+	if rf, ok := ret.Get(0).(func(context.Context, *notifications.CreateNotification) int64); ok {
+		r0 = rf(ctx, createNotification)
 	} else {
 		r0 = ret.Get(0).(int64)
 	}
 
-	if rf, ok := ret.Get(1).(func(*notifications.CreateNotification) error); ok {
-		r1 = rf(createNotification)
+	if rf, ok := ret.Get(1).(func(context.Context, *notifications.CreateNotification) error); ok {
+		r1 = rf(ctx, createNotification)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -54,14 +56,15 @@ type Repository_CreateNotification_Call struct {
 }
 
 // CreateNotification is a helper method to define mock.On call
+//   - ctx context.Context
 //   - createNotification *notifications.CreateNotification
-func (_e *Repository_Expecter) CreateNotification(createNotification interface{}) *Repository_CreateNotification_Call {
-	return &Repository_CreateNotification_Call{Call: _e.mock.On("CreateNotification", createNotification)}
+func (_e *Repository_Expecter) CreateNotification(ctx interface{}, createNotification interface{}) *Repository_CreateNotification_Call {
+	return &Repository_CreateNotification_Call{Call: _e.mock.On("CreateNotification", ctx, createNotification)}
 }
 
-func (_c *Repository_CreateNotification_Call) Run(run func(createNotification *notifications.CreateNotification)) *Repository_CreateNotification_Call {
+func (_c *Repository_CreateNotification_Call) Run(run func(ctx context.Context, createNotification *notifications.CreateNotification)) *Repository_CreateNotification_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(*notifications.CreateNotification))
+		run(args[0].(context.Context), args[1].(*notifications.CreateNotification))
 	})
 	return _c
 }
@@ -71,14 +74,14 @@ func (_c *Repository_CreateNotification_Call) Return(_a0 int64, _a1 error) *Repo
 	return _c
 }
 
-func (_c *Repository_CreateNotification_Call) RunAndReturn(run func(*notifications.CreateNotification) (int64, error)) *Repository_CreateNotification_Call {
+func (_c *Repository_CreateNotification_Call) RunAndReturn(run func(context.Context, *notifications.CreateNotification) (int64, error)) *Repository_CreateNotification_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// DeleteNotificationByID provides a mock function with given fields: id
-func (_m *Repository) DeleteNotificationByID(id int64) (bool, error) {
-	ret := _m.Called(id)
+// DeleteNotificationByID provides a mock function with given fields: ctx, id
+func (_m *Repository) DeleteNotificationByID(ctx context.Context, id int64) (bool, error) {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for DeleteNotificationByID")
@@ -86,17 +89,17 @@ func (_m *Repository) DeleteNotificationByID(id int64) (bool, error) {
 
 	var r0 bool
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int64) (bool, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (bool, error)); ok {
+		return rf(ctx, id)
 	}
-	if rf, ok := ret.Get(0).(func(int64) bool); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) bool); ok {
+		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
 
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -110,14 +113,15 @@ type Repository_DeleteNotificationByID_Call struct {
 }
 
 // DeleteNotificationByID is a helper method to define mock.On call
+//   - ctx context.Context
 //   - id int64
-func (_e *Repository_Expecter) DeleteNotificationByID(id interface{}) *Repository_DeleteNotificationByID_Call {
-	return &Repository_DeleteNotificationByID_Call{Call: _e.mock.On("DeleteNotificationByID", id)}
+func (_e *Repository_Expecter) DeleteNotificationByID(ctx interface{}, id interface{}) *Repository_DeleteNotificationByID_Call {
+	return &Repository_DeleteNotificationByID_Call{Call: _e.mock.On("DeleteNotificationByID", ctx, id)}
 }
 
-func (_c *Repository_DeleteNotificationByID_Call) Run(run func(id int64)) *Repository_DeleteNotificationByID_Call {
+func (_c *Repository_DeleteNotificationByID_Call) Run(run func(ctx context.Context, id int64)) *Repository_DeleteNotificationByID_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(int64))
+		run(args[0].(context.Context), args[1].(int64))
 	})
 	return _c
 }
@@ -127,14 +131,14 @@ func (_c *Repository_DeleteNotificationByID_Call) Return(_a0 bool, _a1 error) *R
 	return _c
 }
 
-func (_c *Repository_DeleteNotificationByID_Call) RunAndReturn(run func(int64) (bool, error)) *Repository_DeleteNotificationByID_Call {
+func (_c *Repository_DeleteNotificationByID_Call) RunAndReturn(run func(context.Context, int64) (bool, error)) *Repository_DeleteNotificationByID_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// FindNotificationByID provides a mock function with given fields: id
-func (_m *Repository) FindNotificationByID(id int64) (*notifications.Notification, error) {
-	ret := _m.Called(id)
+// FindNotificationByID provides a mock function with given fields: ctx, id
+func (_m *Repository) FindNotificationByID(ctx context.Context, id int64) (*notifications.Notification, error) {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for FindNotificationByID")
@@ -142,19 +146,19 @@ func (_m *Repository) FindNotificationByID(id int64) (*notifications.Notificatio
 
 	var r0 *notifications.Notification
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int64) (*notifications.Notification, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (*notifications.Notification, error)); ok {
+		return rf(ctx, id)
 	}
-	if rf, ok := ret.Get(0).(func(int64) *notifications.Notification); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *notifications.Notification); ok {
+		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*notifications.Notification)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -168,14 +172,15 @@ type Repository_FindNotificationByID_Call struct {
 }
 
 // FindNotificationByID is a helper method to define mock.On call
+//   - ctx context.Context
 //   - id int64
-func (_e *Repository_Expecter) FindNotificationByID(id interface{}) *Repository_FindNotificationByID_Call {
-	return &Repository_FindNotificationByID_Call{Call: _e.mock.On("FindNotificationByID", id)}
+func (_e *Repository_Expecter) FindNotificationByID(ctx interface{}, id interface{}) *Repository_FindNotificationByID_Call {
+	return &Repository_FindNotificationByID_Call{Call: _e.mock.On("FindNotificationByID", ctx, id)}
 }
 
-func (_c *Repository_FindNotificationByID_Call) Run(run func(id int64)) *Repository_FindNotificationByID_Call {
+func (_c *Repository_FindNotificationByID_Call) Run(run func(ctx context.Context, id int64)) *Repository_FindNotificationByID_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(int64))
+		run(args[0].(context.Context), args[1].(int64))
 	})
 	return _c
 }
@@ -185,14 +190,14 @@ func (_c *Repository_FindNotificationByID_Call) Return(_a0 *notifications.Notifi
 	return _c
 }
 
-func (_c *Repository_FindNotificationByID_Call) RunAndReturn(run func(int64) (*notifications.Notification, error)) *Repository_FindNotificationByID_Call {
+func (_c *Repository_FindNotificationByID_Call) RunAndReturn(run func(context.Context, int64) (*notifications.Notification, error)) *Repository_FindNotificationByID_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// FindNotificationStatusByID provides a mock function with given fields: id
-func (_m *Repository) FindNotificationStatusByID(id int64) (*notifications.NotificationStatus, error) {
-	ret := _m.Called(id)
+// FindNotificationStatusByID provides a mock function with given fields: ctx, id
+func (_m *Repository) FindNotificationStatusByID(ctx context.Context, id int64) (*notifications.NotificationStatus, error) {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for FindNotificationStatusByID")
@@ -200,19 +205,19 @@ func (_m *Repository) FindNotificationStatusByID(id int64) (*notifications.Notif
 
 	var r0 *notifications.NotificationStatus
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int64) (*notifications.NotificationStatus, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (*notifications.NotificationStatus, error)); ok {
+		return rf(ctx, id)
 	}
-	if rf, ok := ret.Get(0).(func(int64) *notifications.NotificationStatus); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) *notifications.NotificationStatus); ok {
+		r0 = rf(ctx, id)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*notifications.NotificationStatus)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -226,14 +231,15 @@ type Repository_FindNotificationStatusByID_Call struct {
 }
 
 // FindNotificationStatusByID is a helper method to define mock.On call
+//   - ctx context.Context
 //   - id int64
-func (_e *Repository_Expecter) FindNotificationStatusByID(id interface{}) *Repository_FindNotificationStatusByID_Call {
-	return &Repository_FindNotificationStatusByID_Call{Call: _e.mock.On("FindNotificationStatusByID", id)}
+func (_e *Repository_Expecter) FindNotificationStatusByID(ctx interface{}, id interface{}) *Repository_FindNotificationStatusByID_Call {
+	return &Repository_FindNotificationStatusByID_Call{Call: _e.mock.On("FindNotificationStatusByID", ctx, id)}
 }
 
-func (_c *Repository_FindNotificationStatusByID_Call) Run(run func(id int64)) *Repository_FindNotificationStatusByID_Call {
+func (_c *Repository_FindNotificationStatusByID_Call) Run(run func(ctx context.Context, id int64)) *Repository_FindNotificationStatusByID_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(int64))
+		run(args[0].(context.Context), args[1].(int64))
 	})
 	return _c
 }
@@ -243,14 +249,130 @@ func (_c *Repository_FindNotificationStatusByID_Call) Return(_a0 *notifications.
 	return _c
 }
 
-func (_c *Repository_FindNotificationStatusByID_Call) RunAndReturn(run func(int64) (*notifications.NotificationStatus, error)) *Repository_FindNotificationStatusByID_Call {
+func (_c *Repository_FindNotificationStatusByID_Call) RunAndReturn(run func(context.Context, int64) (*notifications.NotificationStatus, error)) *Repository_FindNotificationStatusByID_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// UpdateNotificationAsSent provides a mock function with given fields: id
-func (_m *Repository) UpdateNotificationAsSent(id int64) (bool, error) {
-	ret := _m.Called(id)
+// ListPendingNotifications provides a mock function with given fields: ctx
+func (_m *Repository) ListPendingNotifications(ctx context.Context) ([]notifications.Notification, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListPendingNotifications")
+	}
+
+	var r0 []notifications.Notification
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) ([]notifications.Notification, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) []notifications.Notification); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]notifications.Notification)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Repository_ListPendingNotifications_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListPendingNotifications'
+type Repository_ListPendingNotifications_Call struct {
+	*mock.Call
+}
+
+// ListPendingNotifications is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *Repository_Expecter) ListPendingNotifications(ctx interface{}) *Repository_ListPendingNotifications_Call {
+	return &Repository_ListPendingNotifications_Call{Call: _e.mock.On("ListPendingNotifications", ctx)}
+}
+
+func (_c *Repository_ListPendingNotifications_Call) Run(run func(ctx context.Context)) *Repository_ListPendingNotifications_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *Repository_ListPendingNotifications_Call) Return(_a0 []notifications.Notification, _a1 error) *Repository_ListPendingNotifications_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Repository_ListPendingNotifications_Call) RunAndReturn(run func(context.Context) ([]notifications.Notification, error)) *Repository_ListPendingNotifications_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// ListenNotifications provides a mock function with given fields: ctx
+func (_m *Repository) ListenNotifications(ctx context.Context) (<-chan notifications.Notification, error) {
+	ret := _m.Called(ctx)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListenNotifications")
+	}
+
+	var r0 <-chan notifications.Notification
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context) (<-chan notifications.Notification, error)); ok {
+		return rf(ctx)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context) <-chan notifications.Notification); ok {
+		r0 = rf(ctx)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(<-chan notifications.Notification)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func(context.Context) error); ok {
+		r1 = rf(ctx)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// Repository_ListenNotifications_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListenNotifications'
+type Repository_ListenNotifications_Call struct {
+	*mock.Call
+}
+
+// ListenNotifications is a helper method to define mock.On call
+//   - ctx context.Context
+func (_e *Repository_Expecter) ListenNotifications(ctx interface{}) *Repository_ListenNotifications_Call {
+	return &Repository_ListenNotifications_Call{Call: _e.mock.On("ListenNotifications", ctx)}
+}
+
+func (_c *Repository_ListenNotifications_Call) Run(run func(ctx context.Context)) *Repository_ListenNotifications_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context))
+	})
+	return _c
+}
+
+func (_c *Repository_ListenNotifications_Call) Return(_a0 <-chan notifications.Notification, _a1 error) *Repository_ListenNotifications_Call {
+	_c.Call.Return(_a0, _a1)
+	return _c
+}
+
+func (_c *Repository_ListenNotifications_Call) RunAndReturn(run func(context.Context) (<-chan notifications.Notification, error)) *Repository_ListenNotifications_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateNotificationAsSent provides a mock function with given fields: ctx, id
+func (_m *Repository) UpdateNotificationAsSent(ctx context.Context, id int64) (bool, error) {
+	ret := _m.Called(ctx, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for UpdateNotificationAsSent")
@@ -258,17 +380,17 @@ func (_m *Repository) UpdateNotificationAsSent(id int64) (bool, error) {
 
 	var r0 bool
 	var r1 error
-	if rf, ok := ret.Get(0).(func(int64) (bool, error)); ok {
-		return rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) (bool, error)); ok {
+		return rf(ctx, id)
 	}
-	if rf, ok := ret.Get(0).(func(int64) bool); ok {
-		r0 = rf(id)
+	if rf, ok := ret.Get(0).(func(context.Context, int64) bool); ok {
+		r0 = rf(ctx, id)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
 
-	if rf, ok := ret.Get(1).(func(int64) error); ok {
-		r1 = rf(id)
+	if rf, ok := ret.Get(1).(func(context.Context, int64) error); ok {
+		r1 = rf(ctx, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -282,14 +404,15 @@ type Repository_UpdateNotificationAsSent_Call struct {
 }
 
 // UpdateNotificationAsSent is a helper method to define mock.On call
+//   - ctx context.Context
 //   - id int64
-func (_e *Repository_Expecter) UpdateNotificationAsSent(id interface{}) *Repository_UpdateNotificationAsSent_Call {
-	return &Repository_UpdateNotificationAsSent_Call{Call: _e.mock.On("UpdateNotificationAsSent", id)}
+func (_e *Repository_Expecter) UpdateNotificationAsSent(ctx interface{}, id interface{}) *Repository_UpdateNotificationAsSent_Call {
+	return &Repository_UpdateNotificationAsSent_Call{Call: _e.mock.On("UpdateNotificationAsSent", ctx, id)}
 }
 
-func (_c *Repository_UpdateNotificationAsSent_Call) Run(run func(id int64)) *Repository_UpdateNotificationAsSent_Call {
+func (_c *Repository_UpdateNotificationAsSent_Call) Run(run func(ctx context.Context, id int64)) *Repository_UpdateNotificationAsSent_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(int64))
+		run(args[0].(context.Context), args[1].(int64))
 	})
 	return _c
 }
@@ -299,7 +422,7 @@ func (_c *Repository_UpdateNotificationAsSent_Call) Return(_a0 bool, _a1 error) 
 	return _c
 }
 
-func (_c *Repository_UpdateNotificationAsSent_Call) RunAndReturn(run func(int64) (bool, error)) *Repository_UpdateNotificationAsSent_Call {
+func (_c *Repository_UpdateNotificationAsSent_Call) RunAndReturn(run func(context.Context, int64) (bool, error)) *Repository_UpdateNotificationAsSent_Call {
 	_c.Call.Return(run)
 	return _c
 }
