@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
       target: dev
       context: .
+    command: air -c .air.api.toml
     env_file:
       - .env
     ports:
@@ -15,6 +16,23 @@ services:
       - ./:/app
     depends_on:
       - db
+
+  worker:
+    build:
+      dockerfile: Dockerfile
+      target: dev
+      context: .
+    command: air -c .air.worker.toml
+    env_file:
+      - .env
+    ports:
+      - "2346:2346"
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+#    profiles:
+#      - worker
 
   db:
     image: postgres:17-bullseye
