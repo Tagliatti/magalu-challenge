@@ -29,7 +29,7 @@ func (h *StatusHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	notification, err := h.notificationRepository.FindNotificationStatusByID(id)
+	notification, err := h.notificationRepository.FindNotificationStatusByID(r.Context(), id)
 
 	if err != nil {
 		httputil.InternalServerErrorResponse(w, err)

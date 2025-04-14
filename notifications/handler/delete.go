@@ -25,7 +25,7 @@ func (h *DeleteHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	found, err := h.notificationRepository.DeleteNotificationByID(id)
+	found, err := h.notificationRepository.DeleteNotificationByID(r.Context(), id)
 
 	if err != nil {
 		httputil.InternalServerErrorResponse(w, err)

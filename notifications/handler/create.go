@@ -43,14 +43,14 @@ func (h *CreateHandler) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := h.notificationRepository.CreateNotification(createNotification)
+	id, err := h.notificationRepository.CreateNotification(r.Context(), createNotification)
 
 	if err != nil {
 		httputil.InternalServerErrorResponse(w, err)
 		return
 	}
 
-	notification, err := h.notificationRepository.FindNotificationByID(id)
+	notification, err := h.notificationRepository.FindNotificationByID(r.Context(), id)
 
 	if err != nil {
 		httputil.InternalServerErrorResponse(w, err)

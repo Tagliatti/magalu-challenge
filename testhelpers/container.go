@@ -2,7 +2,7 @@ package testhelpers
 
 import (
 	"context"
-	"database/sql"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -44,8 +44,8 @@ func NewPostgresContainer(ctx context.Context) (*PostgresContainer, error) {
 	}, nil
 }
 
-func TruncateAllTables(ctx context.Context, db *sql.DB) error {
-	_, err := db.ExecContext(ctx, `
+func TruncateAllTables(ctx context.Context, db *pgxpool.Pool) error {
+	_, err := db.Exec(ctx, `
 		DO $$ DECLARE
 			r RECORD;
 		BEGIN

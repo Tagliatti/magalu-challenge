@@ -1,26 +1,46 @@
 package database
 
 import (
-	"database/sql"
+	"context"
 	"fmt"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"os"
 )
-import _ "github.com/lib/pq"
 
-func Connect() (*sql.DB, error) {
+func Connect(ctx context.Context, minConns int32, maxConns int32) (*pgxpool.Pool, error) {
 	dataSource := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
+		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"),
 	)
-	fmt.Println(dataSource)
 
-	return sql.Open("postgres", dataSource)
+	poolConfig, err := pgxpool.ParseConfig(dataSource)
+
+	if err != nil {
+		return nil, err
+	}
+
+	poolConfig.MinConns = minConns
+	poolConfig.MaxConns = maxConns
+
+	pool, err := pgxpool.NewWithConfig(ctx, poolConfig)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pool, nil
 }
 
-func ConnectTest(connectionStr string) (*sql.DB, error) {
-	return sql.Open("postgres", connectionStr)
+func ConnectTest(ctx context.Context, connectionStr string) (*pgxpool.Pool, error) {
+	poolConfig, err := pgxpool.ParseConfig(connectionStr)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pgxpool.NewWithConfig(ctx, poolConfig)
 }
